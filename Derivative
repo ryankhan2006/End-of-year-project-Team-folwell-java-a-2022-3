@@ -1,0 +1,74 @@
+public class Derivative{
+  private String eq;
+  private boolean hasOper;
+  
+  public Derivative(String eq){
+    this.eq = eq; 
+    hasOper = false;
+  }
+
+  public String calculate(){
+    String answer = "";
+    int startIndex = 0;
+    int endIndex = findNextOperator(eq);
+    for(int i = 0; i < eq.length() - 1; i ++){
+        String sub = eq.substring(i, i + 1);
+        if(sub.equals("x")){
+            //finds symbol
+            String symbol = "";
+            if(hasOper){
+                symbol = eq.substring(endIndex, endIndex + 1);
+            }
+            //obtains the current coeffcient and power
+            int coeffcient = Integer.parseInt(eq.substring(startIndex, i));
+            int power = Integer.parseInt(eq.substring(i + 2, endIndex));
+            //creates derrative for that singular term
+            answer += (coeffcient * power) + "x^" + (power - 1) + symbol;
+            //Creates the new indexes for the next term
+            startIndex = endIndex + 1;
+            if(hasOper){
+            endIndex = findNextOperator(eq.substring(endIndex+1));
+            if(hasOper){
+            endIndex += startIndex;
+            }
+            }
+        }
+    }
+    String constant = answer.substring(answer.length() -1);
+    if(constant.equals("+") || constant.equals("-")){
+        answer += 0;
+    }
+    return answer;
+  }
+
+    
+    
+  public int findNextOperator(String equation){
+    int operatorIndex = 100000;
+      
+    if(equation.indexOf("+") > 0)
+    {
+        operatorIndex = equation.indexOf("+");
+        hasOper = true;
+    }
+      
+    if(equation.indexOf("-") > 0 && equation.indexOf("-") < operatorIndex){
+        operatorIndex = equation.indexOf("-");
+        hasOper = true;
+    }
+
+    if(operatorIndex == 100000){
+        operatorIndex = eq.length();
+        hasOper = false;
+    }
+    return operatorIndex;
+  }
+}
+
+
+
+
+
+
+
+
